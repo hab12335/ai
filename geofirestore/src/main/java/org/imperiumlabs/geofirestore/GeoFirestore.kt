@@ -22,7 +22,7 @@ class GeoFirestore(val collectionReference: CollectionReference) {
         /**
          * Build a GeoPoint from a DocumentSnapshot
          *
-         * This model takes as a input a DocumentSnapshot and tries to extract the parameter "l",
+         * This model takes as a input a DocumentSnapshot and tries to extract the parameter "g.geopoint",
          * if it is of type List we extract latitude and longitude and create a valid GeoPoint,
          * if it is already a GeoPoint we return it, in every other case we return null.
          *
@@ -31,7 +31,7 @@ class GeoFirestore(val collectionReference: CollectionReference) {
          */
         fun getLocationValue(documentSnapshot: DocumentSnapshot): GeoPoint? {
             return try {
-                when (val locationDataRaw = documentSnapshot.data!!["l"]) {
+                when (val locationDataRaw = documentSnapshot.data!!["g.geopoint"]) {
                     is List<*> -> {
                         val latitudeObj = locationDataRaw[0] as Double
                         val longitudeObj = locationDataRaw[1] as Double
@@ -138,8 +138,8 @@ class GeoFirestore(val collectionReference: CollectionReference) {
         val geoHash = GeoHash(GeoLocation(location.latitude, location.longitude))
         //Create a Map with the fields to add
         val updates = HashMap<String, Any>()
-        updates["g"] = geoHash.geoHashString
-        updates["l"] = location
+        updates["g.geohash"] = geoHash.geoHashString
+        updates["g.geopoint"] = location
         //Update the DocumentReference with the location data
         docRef.set(updates, SetOptions.merge())
                 .addOnSuccessListener { completionCallback?.onComplete(null) }
@@ -169,8 +169,8 @@ class GeoFirestore(val collectionReference: CollectionReference) {
         }
         //Crate a Map with the fields to remove
         val updates = HashMap<String, Any>()
-        updates["g"] = FieldValue.delete()
-        updates["l"] = FieldValue.delete()
+        updates["g.geohash"] = FieldValue.delete()
+        updates["g.geopoint"] = FieldValue.delete()
         //Remove the relative locations fields from the DocumentReference
         val docRef = this.getRefForDocumentID(documentID)
         docRef.set(updates, SetOptions.merge())
@@ -221,7 +221,7 @@ class GeoFirestore(val collectionReference: CollectionReference) {
             GeoHashQuery.queriesAtLocation(GeoLocation(center.latitude, center.longitude), radius)
                     .forEach {
                         this.add(this@GeoFirestore.collectionReference
-                                .orderBy("g")
+                                .orderBy("g.geohash")
                                 .startAt(it.startValue)
                                 .endAt(it.endValue)
                                 .get())

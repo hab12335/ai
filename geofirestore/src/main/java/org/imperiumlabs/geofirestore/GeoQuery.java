@@ -242,7 +242,7 @@ public class GeoQuery {
                 outstandingQueries.add(query);
                 CollectionReference collectionReference = this.geoFirestore.getCollectionReference();
 
-                Query firestoreQuery = collectionReference.orderBy("g").startAt(query.getStartValue()).endAt(query.getEndValue());
+                Query firestoreQuery = collectionReference.orderBy("g.geohash").startAt(query.getStartValue()).endAt(query.getEndValue());
 
                 ListenerRegistration childAddedListener = firestoreQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -432,7 +432,7 @@ public class GeoQuery {
             if (!oldQueries.contains(query)) {
                 outstandingQueries.add(query);
                 CollectionReference collectionReference = this.geoFirestore.getCollectionReference();
-                Query firestoreQuery = collectionReference.orderBy("g").startAt(query.getStartValue()).endAt(query.getEndValue());
+                Query firestoreQuery = collectionReference.orderBy("g.geohash").startAt(query.getStartValue()).endAt(query.getEndValue());
                 queries.add(firestoreQuery);
             }
         }

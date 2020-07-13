@@ -18,14 +18,14 @@ All notable changes to this project will be documented in this file.
 
 ## [v1.5.0] - 2019-06-24
 ### Added
-- Ability to parse document with "g" as List or GeoPoint
+- Ability to parse document with "g.geohash" as List or GeoPoint
 - Added this CHANGELOG.md
 - method getAtLocation to GeoFirestore replacing the SingleGeoQuery class
 - SingleGeoQueryDataEventCallback to GeoFirestore
 
 ### Changed
 - Reorganized the entire project structure
-- Type of the "g" parameter from List<Doube> to GeoPoint
+- Type of the "g.geohash" parameter from List<Doube> to GeoPoint
 - The SingleGeoQuery is a method in the GeoFirestore class
 - Updated the README.md with the newest features
 - Changed package "callbacks" to "listeners"
